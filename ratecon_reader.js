@@ -75,6 +75,7 @@ function parseRateConfirmation(text) {
     brokerMc: null,
     origin: null,
     destination: null,
+    stops: [],
     pickupDate: null,
     deliveryDate: null,
     totalRate: null,
@@ -89,6 +90,11 @@ function parseRateConfirmation(text) {
   for (const rawLine of lines) {
     const line = rawLine.trim();
     if (!line) continue;
+    const stop = line.match(/^stop\s*(?:#?\d+)?\s*[:\-]\s*(.+)$/i);
+    if (stop) {
+      result.stops.push(parseCityState(stop[1]));
+      continue;
+    }
     if (/detention|layover/i.test(line)) {
       result.notes.push(line);
     }
