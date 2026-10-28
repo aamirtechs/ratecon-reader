@@ -154,3 +154,28 @@ test("CLI check exits 0 when required fields are present", () => {
   });
   assert.equal(result.status, 0);
 });
+
+test("CLI check passes when standard fields are present without strict fields", () => {
+  const result = spawnSync(process.execPath, [CLI, "--check"], {
+    input: "Load #: A1\nOrigin: Dallas, TX\nDestination: Atlanta, GA\nTotal: $900.00\n",
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 0);
+});
+
+test("CLI strict check fails when linehaul, fuel surcharge and miles are missing", () => {
+  const result = spawnSync(process.execPath, [CLI, "--check", "--strict"], {
+    input: "Load #: A1\nOrigin: Dallas, TX\nDestination: Atlanta, GA\nTotal: $900.00\n",
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /missing required fields: linehaul, fuelSurcharge, miles/);
+});
+
+test("CLI strict check passes when all strict fields are present", () => {
+  const result = spawnSync(process.execPath, [CLI, "--strict", "--check"], {
+    input: "Load #: A1\nOrigin: Dallas, TX\nDestination: Atlanta, GA\nTotal: $900.00\nLinehaul: $700.00\nFuel Surcharge: $200.00\nMiles: 820\n",
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 0);
+});
