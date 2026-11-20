@@ -179,10 +179,12 @@ function main(argv) {
   let json = true;
   let summary = false;
   let check = false;
+  let strict = false;
   for (const arg of args) {
     if (arg === "--json") json = true;
     else if (arg === "--summary") { summary = true; json = false; }
     else if (arg === "--check") check = true;
+    else if (arg === "--strict") strict = true;
     else if (!arg.startsWith("--")) path = arg;
     else {
       console.error("error: unknown flag " + arg);
@@ -199,6 +201,11 @@ function main(argv) {
     if (!data.origin) missing.push("origin");
     if (!data.destination) missing.push("destination");
     if (data.totalRate == null) missing.push("totalRate");
+    if (strict) {
+      if (data.linehaul == null) missing.push("linehaul");
+      if (data.fuelSurcharge == null) missing.push("fuelSurcharge");
+      if (data.miles == null) missing.push("miles");
+    }
     if (missing.length) {
       console.error("missing required fields: " + missing.join(", "));
       return 1;

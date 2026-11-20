@@ -21,7 +21,7 @@ node ratecon_reader.js --check <file>
 cat ratecon.txt | node ratecon_reader.js
 ```
 
-With no file argument, the tool reads stdin. `--json` is the default output. `--summary` prints a one page human readable summary. `--check` exits 1 when any required field is missing (load number, origin, destination, rate) and 0 otherwise.
+With no file argument, the tool reads stdin. `--json` is the default output. `--summary` prints a one page human readable summary. `--check` exits 1 when any standard required field is missing (load number, origin, destination, total rate) and 0 otherwise. Add `--strict` alongside `--check` to also require linehaul, fuel surcharge, and miles. Without `--strict`, those three fields remain optional for completeness checks.
 
 ## Real output
 
