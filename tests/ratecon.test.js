@@ -36,6 +36,16 @@ test("parses origin and destination with comma state", () => {
   assert.deepEqual(data.destination, { city: "Atlanta", state: "GA", raw: "Atlanta, GA" });
 });
 
+test("collects intermediate stops while preserving origin and destination", () => {
+  const data = parseRateConfirmation("Origin: Dallas, TX\nStop #1: Austin, TX\nStop #2: Houston, TX\nDestination: Atlanta, GA\n");
+  assert.deepEqual(data.stops, [
+    { city: "Austin", state: "TX", raw: "Austin, TX" },
+    { city: "Houston", state: "TX", raw: "Houston, TX" },
+  ]);
+  assert.equal(data.origin.city, "Dallas");
+  assert.equal(data.destination.city, "Atlanta");
+});
+
 test("parses pickup and delivery location variants without dates", () => {
   const data = parseRateConfirmation("Pickup Location: Houston TX 77001\nDelivery Location: Memphis, TN\n");
   assert.equal(data.origin.city, "Houston");
